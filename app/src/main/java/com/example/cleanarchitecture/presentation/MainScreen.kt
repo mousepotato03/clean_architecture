@@ -12,27 +12,35 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.cleanarchitecture.domain.PRODUCT_SAMPLE
 import com.example.cleanarchitecture.domain.Product
 import com.example.cleanarchitecture.ui.theme.CleanArchitectureTheme
+import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(){
+    val viewModel = viewModel<MainViewModel>()
+    val products by viewModel.products.collectAsStateWithLifecycle()
+
     Scaffold(
         content = {
                   Column(modifier = Modifier.padding(it)) {
-                      ItemList(productList = PRODUCT_SAMPLE)
+                      ItemList(products)
                   }
         },
-        bottomBar = { ButtonBar()}
+        bottomBar = { ButtonBar(viewModel)}
     )
 }
 
 @Composable
 fun ItemList(productList: List<Product>){
+    if(productList.isEmpty()){ Text(text = "Items don't existed.") }
     LazyColumn(modifier = Modifier.fillMaxWidth()){
         items(productList){
             Text(text = it.name)
@@ -41,23 +49,29 @@ fun ItemList(productList: List<Product>){
 }
 
 @Composable
-fun ButtonBar(){
+fun ButtonBar(viewModel: MainViewModel){
     Row(
         horizontalArrangement = Arrangement.SpaceAround,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { viewModel.loadProductAll() }) {
             Text(text = "Load")
         }
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { viewModel.addProduct(product()) }) {
             Text(text = "Add")
         }
-        Button(onClick = { /*TODO*/ }) {
+        Button(onClick = { viewModel.removeProduct() }) {
             Text(text = "Remove")
         }
     }
 }
+
+fun product() = Product(
+        id = "p${Random.nextInt()}",
+        name = "prod-${Random.nextInt()}",
+        price = Random.nextInt()
+    )
 
 @Preview(showBackground = true, widthDp = 320, heightDp = 640 )
 @Composable
