@@ -40,7 +40,7 @@ fun MainScreen(){
 
 @Composable
 fun ItemList(productList: List<Product>){
-    if(productList.isEmpty()){ Text(text = "Items don't existed.") }
+    if(productList.isEmpty()){ Text(text = "No Item") }
     LazyColumn(modifier = Modifier.fillMaxWidth()){
         items(productList){
             Text(text = it.name)
@@ -61,7 +61,7 @@ fun ButtonBar(viewModel: MainViewModel){
         Button(onClick = { viewModel.addProduct(product()) }) {
             Text(text = "Add")
         }
-        Button(onClick = { viewModel.removeProduct() }) {
+        Button(onClick = { viewModel.removeLastProduct() }) {
             Text(text = "Remove")
         }
     }

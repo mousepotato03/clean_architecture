@@ -1,26 +1,43 @@
 package com.example.cleanarchitecture.presentation
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.example.cleanarchitecture.DependenciesProvider
 import com.example.cleanarchitecture.domain.PRODUCT_SAMPLE
 import com.example.cleanarchitecture.domain.Product
+import com.example.cleanarchitecture.domain.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.getAndUpdate
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 
-class MainViewModel : ViewModel() {
-    private val _products = MutableStateFlow(emptyList<Product>())
-    val products = _products.asStateFlow()
+class MainViewModel(
+    private val productRepository: ProductRepository = DependenciesProvider.productRepository
+) : ViewModel() {
+    val products = productRepository.products.stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        emptyList()
+    )
 
     fun loadProductAll(){
-        _products.update { PRODUCT_SAMPLE }
+        viewModelScope.launch {
+            productRepository.loadProductAll()
+        }
     }
 
     fun addProduct(product: Product){
-        _products.getAndUpdate { it + product }
+        viewModelScope.launch {
+            productRepository.addProduct(product)
+        }
     }
 
-    fun removeProduct(){
-        _products.getAndUpdate { it.dropLast(1) }
+    fun removeLastProduct(){
+        viewModelScope.launch {
+            productRepository.removeLastProduct()
+        }
     }
 }
