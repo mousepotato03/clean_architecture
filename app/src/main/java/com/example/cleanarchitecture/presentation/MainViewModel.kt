@@ -3,7 +3,6 @@ package com.example.cleanarchitecture.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleanarchitecture.DependenciesProvider
-import com.example.cleanarchitecture.domain.PRODUCT_SAMPLE
 import com.example.cleanarchitecture.domain.Product
 import com.example.cleanarchitecture.domain.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow

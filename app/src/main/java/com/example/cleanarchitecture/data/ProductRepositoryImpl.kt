@@ -1,6 +1,5 @@
 package com.example.cleanarchitecture.data
 
-import com.example.cleanarchitecture.domain.PRODUCT_SAMPLE
 import com.example.cleanarchitecture.domain.Product
 import com.example.cleanarchitecture.domain.ProductRepository
 import kotlinx.coroutines.flow.Flow
