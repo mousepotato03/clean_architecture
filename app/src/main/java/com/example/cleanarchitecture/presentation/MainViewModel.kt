@@ -3,40 +3,37 @@ package com.example.cleanarchitecture.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.cleanarchitecture.DependenciesProvider
-import com.example.cleanarchitecture.domain.Product
+import com.example.cleanarchitecture.domain.model.Product
 import com.example.cleanarchitecture.domain.ProductRepository
-import kotlinx.coroutines.flow.MutableStateFlow
+import com.example.cleanarchitecture.domain.usecase.AddProductUseCase
+import com.example.cleanarchitecture.domain.usecase.GetProductsUseCase
+import com.example.cleanarchitecture.domain.usecase.LoadProductAllUseCase
+import com.example.cleanarchitecture.domain.usecase.RemoveLastProductUseCase
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.stateIn
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class MainViewModel(
-    private val productRepository: ProductRepository = DependenciesProvider.productRepository
+    private val getProductsUseCase: GetProductsUseCase = DependenciesProvider.getProductsUseCase,
+    private val loadProductAllUseCase: LoadProductAllUseCase = DependenciesProvider.loadProductsUseCase,
+    private val addProductUseCase: AddProductUseCase = DependenciesProvider.addProductAllUseCase,
+    private val removeLastProductUseCase: RemoveLastProductUseCase = DependenciesProvider.removeLastProductUseCase
 ) : ViewModel() {
-    val products = productRepository.products.stateIn(
+    val products = getProductsUseCase().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
         emptyList()
     )
 
     fun loadProductAll(){
-        viewModelScope.launch {
-            productRepository.loadProductAll()
-        }
+        viewModelScope.launch { loadProductAllUseCase() }
     }
 
     fun addProduct(product: Product){
-        viewModelScope.launch {
-            productRepository.addProduct(product)
-        }
+        viewModelScope.launch { addProductUseCase(product) }
     }
 
     fun removeLastProduct(){
-        viewModelScope.launch {
-            productRepository.removeLastProduct()
-        }
+        viewModelScope.launch { removeLastProductUseCase() }
     }
 }

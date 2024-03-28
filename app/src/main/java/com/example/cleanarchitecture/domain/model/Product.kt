@@ -1,4 +1,4 @@
-package com.example.cleanarchitecture.domain
+package com.example.cleanarchitecture.domain.model
 
 data class Product(
     val id: String,

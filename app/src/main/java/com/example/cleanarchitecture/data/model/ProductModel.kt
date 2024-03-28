@@ -1,6 +1,6 @@
-package com.example.cleanarchitecture.data
+package com.example.cleanarchitecture.data.model
 
-import com.example.cleanarchitecture.domain.Product
+import com.example.cleanarchitecture.domain.model.Product
 import java.util.Date
 
 data class ProductModel(
@@ -12,13 +12,13 @@ data class ProductModel(
     val updatedAt: Date
 )
 
-fun ProductModel.toDomainModel():Product = Product(
+fun ProductModel.toDomainModel(): Product = Product(
     id = this.id,
     name = this.name,
     price = this.price
 )
 
-fun Product.toDataModel():ProductModel = ProductModel(
+fun Product.toDataModel(): ProductModel = ProductModel(
     id = this.id,
     name = this.name,
     price = this.price,

@@ -1,6 +1,6 @@
 package com.example.cleanarchitecture.data
 
-import com.example.cleanarchitecture.domain.Product
+import com.example.cleanarchitecture.domain.model.Product
 import kotlinx.coroutines.flow.Flow
 
 interface ProductDataSource {
